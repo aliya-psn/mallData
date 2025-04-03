@@ -1,7 +1,7 @@
 {
-  "name": "ball-admin",
+  "name": "mall",
   "version": "1.0.0",
-  "description": "ball-admin",
+  "description": "mall",
   "author": "",
   "scripts": {
     "serve": "vue-cli-service serve",

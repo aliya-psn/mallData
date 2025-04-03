@@ -55,6 +55,16 @@ export const constantRoutes = [
       meta: { title: '价格对比', icon: 'echart' }
     }]
   },
+  {
+    path: '/mine',
+    component: Layout,
+    children: [{
+      path: 'index',
+      name: 'Mine',
+      component: () => import('@/views/mine/index'),
+      meta: { title: '个人中心', icon: 'user' }
+    }]
+  },
   // {
   //   path: '/echart',
   //   component: Layout,
