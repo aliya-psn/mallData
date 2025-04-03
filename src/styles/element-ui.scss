@@ -1,0 +1,25 @@
+// cover some element-ui styles
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block;
+  }
+}
+
+// to fix el-date-picker css style
+.el-range-separator {
+  box-sizing: content-box;
+}
