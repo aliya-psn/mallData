@@ -16,14 +16,6 @@ export function register(data) {
   })
 }
 
-export function getInfo(token) {
-  return request({
-    url: '/client/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
-
 export function logout() {
   return request({
     url: '/client/user/logout',
