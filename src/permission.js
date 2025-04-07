@@ -2,6 +2,7 @@ import router from './router'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import getPageTitle from '@/utils/get-page-title'
+import store from '@/store'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -17,7 +18,14 @@ router.beforeEach(async(to, from, next) => {
     NProgress.done()
   } else if (isLogin) {
     // 已登录用户直接放行
-    next()
+    const username = localStorage.getItem('username')
+    store.dispatch('user/setUsername', username)
+
+    if (to.path === '/') {
+      next('/dashboard')
+    } else {
+      next()
+    }
   } else {
     // 未登录用户重定向到登录页
     next('/login')

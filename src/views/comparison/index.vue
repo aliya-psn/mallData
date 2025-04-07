@@ -9,17 +9,22 @@
 
     <div class="content-wrapper">
       <div class="input-wrapper">
-        <div class="label">商品名称型号：</div>
-        <el-input v-model="selectType" placeholder="请输入商品名称和型号" class="product-select" />
+        <div class="label">商品名称：</div>
+        <el-input v-model="searchName" placeholder="请输入商品名称" class="product-select" />
 
         <div class="platform-select">
           <span class="label">选择平台：</span>
           <el-checkbox-group v-model="selectedPlatforms" @change="filterByPlatforms">
-            <el-checkbox label="taobao">淘宝</el-checkbox>
-            <el-checkbox label="jd">京东</el-checkbox>
-            <el-checkbox label="pdd">拼多多</el-checkbox>
+            <el-checkbox :label="1">拼多多</el-checkbox>
+            <el-checkbox :label="2">京东</el-checkbox>
+            <el-checkbox :label="3">淘宝</el-checkbox>
           </el-checkbox-group>
         </div>
+
+        <el-button type="primary" style="margin-left: 20px" @click="getData">查询</el-button>
+      </div>
+      <div class="data-limit-tip">
+        <i class="el-icon-info" /> 注意：系统仅处理前1000条数据，以确保分析性能
       </div>
     </div>
 
@@ -31,9 +36,9 @@
       <!-- 发货地饼图 -->
       <!-- <chinaArea v-if="filteredData.length > 0" id="area-chart" :echarts-data="filteredData" /> -->
     </div>
-
     <div v-else class="no-data">
-      <el-empty description="暂无数据，请选择其他商品类型或平台"></el-empty>
+      <i class="el-icon-warning" />
+      <span>暂无数据</span>
     </div>
 
     <!-- 价格与销量 散点图 -->
@@ -48,7 +53,7 @@
 </template>
 
 <script>
-import { getProductType, getProductsListByType } from '@/api/common'
+import { getGoodsRank } from '@/api/common'
 import barShop from './components/barShop.vue' // 店铺销量柱状图
 import chinaArea from './components/areaChart.vue' // 发货地饼图
 
@@ -71,156 +76,34 @@ export default {
     return {
       echartsData: [],
       filteredData: [],
-      types: [],
-      selectType: '',
-      selectedPlatforms: ['taobao', 'jd', 'pdd'], // 默认选中所有平台
+      searchName: '',
+      selectedPlatforms: [1, 2, 3], // 默认选中所有平台
       loading: false
     }
   },
-  async created() {
-    this.loading = true
-    try {
-      const res = await getProductType()
-      this.types = res.data.map((item) => {
-        return item.type
-      })
-      this.selectType = this.types[0]
-      await this.getEchartsData()
-    } catch (error) {
-      this.$message.error('获取商品类型失败')
-    } finally {
-      this.loading = false
-    }
-  },
   methods: {
+    // 获取数据
+    async getData() {
+      this.loading = true
+      try {
+        await this.getEchartsData()
+      } catch (error) {
+        this.$message.error('获取商品类型失败')
+      } finally {
+        this.loading = false
+      }
+    },
+    // 获取echarts数据
     getEchartsData() {
       this.loading = true
       // 获取表统计数量
-      return getProductsListByType(this.selectType).then((res) => {
-        if (res.code === 200) {
-          this.echartsData = res.data
-          this.echartsData = [
-    {
-        "productName": "RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "3497.00",
-        "realSales": "13",
-        "img": "https://img.alicdn.com/imgextra/i4/452030163/O1CN012IrITu1D4hUHdW4dt_!!0-saturn_solar.jpg_360x360q90.jpg_.webp",
-        "shopName": "戴尔华行垣创专卖店",
-        "area": "四川",
-        "type": "电脑",
-        "platform": "pdd"
-    },
-    {
-        "productName": "小米英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "5699.00",
-        "realSales": "6",
-        "img": "https://img.alicdn.com/imgextra/i3/3703895035/O1CN01EMVVwc1n453rTN4R2_!!0-saturn_solar.jpg_360x360q90.jpg_.webp",
-        "shopName": "华硕崇硕专卖店",
-        "area": "北京",
-        "type": "电脑",
-        "platform": "pdd"
-    },
-    {
-        "productName": "小米英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "5099.00",
-        "realSales": "2",
-        "img": "https://g-search3.alicdn.com/img/bao/uploaded/i4/i1/2616970884/O1CN01QwjAPY1IOv3iKX0SI_!!0-item_pic.jpg_360x360q90.jpg_.webp",
-        "shopName": "苏宁易购官方旗舰店",
-        "area": "江苏",
-        "type": "电脑",
-        "platform": "taobao"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "5000.00",
-        "realSales": "9",
-        "img": "https://gw.alicdn.com/imgextra/O1CN019fL7wJ1JgbyZyJzsm_!!2651871058-0-picasso.jpg_360x360q90.jpg_.webp",
-        "shopName": "七彩虹官方旗舰店",
-        "area": "上海",
-        "type": "电脑",
-        "platform": "taobao"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "5499.00",
-        "realSales": "2",
-        "img": "https://g-search2.alicdn.com/img/bao/uploaded/i4/i2/2616970884/O1CN01PFrKKB1IOv3lo2CFF_!!2-item_pic.png_360x360q90.jpg_.webp",
-        "shopName": "苏宁易购官方旗舰店",
-        "area": "北京",
-        "type": "电脑",
-        "platform": "jd"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "4899.00",
-        "realSales": "7",
-        "img": "https://g-search3.alicdn.com/img/bao/uploaded/i4/i4/2549841410/O1CN01HQ144a1MHpOCauMzJ_!!2549841410-0-tmg_sticker_hand.jpg_360x360q90.jpg_.webp",
-        "shopName": "天猫国际自营全球超级店",
-        "area": "浙江",
-        "type": "电脑",
-        "platform": "taobao"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "4499.00",
-        "realSales": "15",
-        "img": "https://g-search2.alicdn.com/img/bao/uploaded/i4/i2/6000000000356/O1CN014TVtaG1EV5wC9u8HD_!!6000000000356-0-sm.jpg_360x360q90.jpg_.webp",
-        "shopName": "天猫超市",
-        "area": "上海",
-        "type": "电脑",
-        "platform": "jd"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "4699.00",
-        "realSales": "12",
-        "img": "https://g-search3.alicdn.com/img/bao/uploaded/i4/i3/6000000002392/O1CN01MjoQHQ1TXaKMCy6FK_!!6000000002392-0-sm.jpg_360x360q90.jpg_.webp",
-        "shopName": "天猫超市",
-        "area": "上海",
-        "type": "电脑",
-        "platform": "taobao"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "4999.00",
-        "realSales": "24",
-        "img": "https://gw.alicdn.com/imgextra/O1CN01rGeTdl2LY1xfubA2i_!!3937219703-0-C2M.jpg_360x360q90.jpg_.webp",
-        "shopName": "天天特卖工厂店",
-        "area": "浙江",
-        "type": "电脑",
-        "platform": "taobao"
-    },
-    {
-        "productName": "小米14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "4779.00",
-        "realSales": "24",
-        "img": "https://gw.alicdn.com/imgextra/O1CN01rGeTdl2LY1xfubA2i_!!3937219703-0-C2M.jpg_360x360q90.jpg_.webp",
-        "shopName": "天天特卖工厂店",
-        "area": "浙江",
-        "type": "电脑",
-        "platform": "jd"
-    },
-    {
-        "productName": "小米/RedmiBook Pro 14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "5299.00",
-        "realSales": "24",
-        "img": "https://gw.alicdn.com/imgextra/O1CN01rGeTdl2LY1xfubA2i_!!3937219703-0-C2M.jpg_360x360q90.jpg_.webp",
-        "shopName": "天天特卖工厂店",
-        "area": "浙江",
-        "type": "电脑",
-        "platform": "pdd"
-    },
-    {
-        "productName": "小米14 12代英特尔酷睿i7高性能轻薄本笔记本电脑",
-        "price": "4579.00",
-        "realSales": "24",
-        "img": "https://gw.alicdn.com/imgextra/O1CN01rGeTdl2LY1xfubA2i_!!3937219703-0-C2M.jpg_360x360q90.jpg_.webp",
-        "shopName": "天天特卖工厂店",
-        "area": "浙江",
-        "type": "电脑",
-        "platform": "jd"
-    }
-]
+      return getGoodsRank({
+        name: this.searchName,
+        pageNo: 1,
+        pageSize: 1000
+      }).then((res) => {
+        if (res.code === '000') {
+          this.echartsData = res.content
           this.filterByPlatforms()
         } else {
           this.$message({
@@ -240,7 +123,7 @@ export default {
         this.filteredData = []
       } else {
         // 根据选中的平台进行筛选
-        this.filteredData = this.echartsData.filter(item => 
+        this.filteredData = this.echartsData.filter(item =>
           this.selectedPlatforms.includes(item.platform)
         )
       }
@@ -263,16 +146,16 @@ export default {
 .header-section {
   width: 100%;
   margin-bottom: 20px;
-  
+
   .title-area {
     text-align: center;
-    
+
     .main-title {
       font-size: 24px;
       color: #303133;
       margin-bottom: 8px;
     }
-    
+
     .sub-title {
       font-size: 14px;
       color: #909399;
@@ -293,15 +176,31 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  
+
   .label {
     font-size: 15px;
     font-weight: 500;
     color: #303133;
   }
-  
+
   .product-select {
     width: 200px;
+  }
+}
+
+.data-limit-tip {
+  margin-top: 15px;
+  padding: 8px 12px;
+  background-color: #f0f9ff;
+  border-radius: 4px;
+  color: #409EFF;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+
+  i {
+    margin-right: 5px;
+    font-size: 16px;
   }
 }
 
@@ -309,7 +208,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 30px;
-  
+
   :deep(.el-checkbox) {
     margin-right: 20px;
     padding: 8px 15px;
@@ -335,5 +234,8 @@ export default {
 
 .no-data {
   margin: 50px 0;
+  color: #909399;
+  font-size: 16px;
+  text-align: center;
 }
 </style>

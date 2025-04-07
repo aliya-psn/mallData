@@ -2,14 +2,7 @@
   <div class="dashboard-container">
     <div class="current-shop">
       <div>当前商品：</div>
-      <el-select v-model="selectType" placeholder="请选择" @change="getEchartsData">
-        <el-option
-          v-for="item in types"
-          :key="item"
-          :label="item"
-          :value="item"
-        />
-      </el-select>
+      <el-input v-model="selectType" placeholder="请输入商品类型" />
     </div>
 
     <!-- 价格与销量 散点图 -->
@@ -26,7 +19,7 @@
 </template>
 
 <script>
-import { getProductType, getProductsListByType } from '@/api/common'
+import { getProductsList } from '@/api/common'
 import barChart from './components/barChart.vue' // 柱状图
 import barPrice from './components/barPrice.vue' // 柱状图
 import lineChart from './components/lineChart.vue' // 折线图
@@ -44,23 +37,18 @@ export default {
     return {
       echartsData: [],
 
-      types: [],
       selectType: ''
     }
   },
   async created() {
-    const res = await getProductType()
-    this.types = res.data.map((item) => {
-      return item.type
-    })
-    this.selectType = this.types[0]
+    this.selectType = '手机'
     this.getEchartsData()
   },
   methods: {
     getEchartsData() {
       // 获取表统计数量
-      getProductsListByType(this.selectType).then((res) => {
-        if (res.code === 200) {
+      getProductsList(this.selectType).then((res) => {
+        if (res.code === '000') {
           this.echartsData = res.data
         } else {
           this.$message({

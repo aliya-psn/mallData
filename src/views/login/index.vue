@@ -110,6 +110,7 @@ export default {
           this.loading = true
           this.$store.dispatch('user/loginAction', this.loginForm).then(() => {
             localStorage.setItem('loginStatus', true)
+            localStorage.setItem('username', this.loginForm.username)
             this.$message.success('登录成功')
             this.loading = false
             setTimeout(() => {

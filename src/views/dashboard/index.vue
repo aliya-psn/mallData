@@ -12,64 +12,122 @@
       />
       <div class="platform-select">
         <span class="label">选择平台：</span>
-        <el-checkbox-group v-model="selectedPlatforms">
-          <el-checkbox label="taobao">
-            <span class="platform-icon"></span>淘宝
-          </el-checkbox>
-          <el-checkbox label="jd">
-            <span class="platform-icon"></span>京东
-          </el-checkbox>
-          <el-checkbox label="pdd">
-            <span class="platform-icon"></span>拼多多
-          </el-checkbox>
-        </el-checkbox-group>
+        <el-radio-group v-model="selectedPlatform">
+          <el-radio :label="1">
+            <span class="platform-icon" />拼多多
+          </el-radio>
+          <el-radio :label="2">
+            <span class="platform-icon" />京东
+          </el-radio>
+          <el-radio :label="3">
+            <span class="platform-icon" />淘宝
+          </el-radio>
+        </el-radio-group>
       </div>
-      <el-button
-        type="primary"
-        style="margin-left: 20px"
-        :loading="listLoading"
-        @click="handleFetch"
-      >搜索</el-button>
+      <el-button type="primary" style="margin-left: 20px" :loading="listLoading" @click="handleFetch">搜索</el-button>
     </div>
     <div class="goods-list-box">
-      <div class="goods-list">
-        <div
-          v-for="(item, index) in paginatedData"
-          :key="index"
-          class="goods-show-info"
-        >
-          <div class="goods-show-img">
-            <img :src="item.img">
-          </div>
-          <div class="goods-show-price">
-            <svg-icon icon-class="price" />
-            <span class="seckill-price">{{ item.price }}</span>
-          </div>
-          <div class="goods-show-num">
-            <span>已售：{{ item.realSales }}</span>
-          </div>
-          <div class="goods-show-seller">
-            <span>{{ item.productName }}</span>
-          </div>
-          <div class="goods-show-detail">
-            <span>{{ item.shopName }}</span>
-            <span class="area">{{ item.area }}</span>
-            <span class="platform">{{ getPlatformName(item.platform) }}</span>
-          </div>
-        </div>
-      </div>
+      <el-table v-loading="listLoading" :data="dataList" fit highlight-current-row style="width: 100%">
+        <el-table-column label="商品名称" prop="name" min-width="200">
+          <template slot-scope="scope">
+            <span class="goods-name">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="商品编码" prop="code" width="180" align="center">
+          <template slot-scope="scope">
+            <span class="goods-code">{{ scope.row.code }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="价格" prop="price" width="100" align="center">
+          <template slot-scope="scope">
+            <div class="goods-price">
+              <svg-icon icon-class="price" />
+              <span class="seckill-price">{{ scope.row.price }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="店铺名称" prop="shopName" width="120" align="center">
+          <template slot-scope="scope">
+            <span class="shop-name">{{ scope.row.shopName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="地区" prop="province" width="100" align="center">
+          <template slot-scope="scope">
+            <span class="area">{{ scope.row.province }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="销量" prop="sold" width="100" align="center">
+          <template slot-scope="scope">
+            <span class="sold">已售：{{ scope.row.sold }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="颜色" prop="colour" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="colour">{{ scope.row.colour }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="内存" prop="memory" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="memory">{{ scope.row.memory }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="处理器" prop="cpu" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="cpu">{{ scope.row.cpu }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="前置像素" prop="frontPixel" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="pixel">{{ scope.row.frontPixel }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="后置像素" prop="realPixel" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="pixel">{{ scope.row.realPixel }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="屏幕尺寸" prop="screenSize" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="screen">{{ scope.row.screenSize }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="刷新率" prop="refreshRate" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="refresh">{{ scope.row.refreshRate }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="分辨率" prop="resolution" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="resolution">{{ scope.row.resolution }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="电池容量" prop="batteryCapacity" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="battery">{{ scope.row.batteryCapacity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="充电接口" prop="chargerPort" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="charger">{{ scope.row.chargerPort }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="充电功率" prop="chargerPower" width="90" align="center">
+          <template slot-scope="scope">
+            <span class="charger">{{ scope.row.chargerPower }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
       <div class="pagination-container">
         <el-pagination
           background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-sizes="[10, 20, 30, 50]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="dataList ? dataList.length : 0"
-        >
-        </el-pagination>
+          :total="totalSize"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
   </div>
@@ -77,109 +135,72 @@
 
 <script>
 import {
-  getProductsListByType,
-  spiderShop,
-  getProductType
+  getProductsList
 } from '@/api/common'
 
 export default {
   data() {
     return {
       keywords: '', // 关键字
-      types: [],
-      selectType: '',
+      selectedPlatform: 1, // 默认选择平台
+
       dataList: null,
-      count: 0,
+      totalSize: 0,
+
       listLoading: true,
-      queryPage: 5, // 截止
-      startPage: null, // 开始
       currentPage: 1, // 当前页码
-      pageSize: 12, // 每页显示数量
-      selectedPlatforms: ['taobao'] // 默认选择淘宝平台
-    }
-  },
-  computed: {
-    paginatedData() {
-      if (!this.dataList) return []
-      const startIndex = (this.currentPage - 1) * this.pageSize
-      const endIndex = startIndex + this.pageSize
-      return this.dataList.slice(startIndex, endIndex)
+      pageSize: 10 // 每页显示数量
     }
   },
   async created() {
-    // 获取分类
-    const res = await getProductType()
-    this.types = res.data.map((item) => {
-      return item.type
-    })
-    if (this.types.length === 0) {
-      this.listLoading = false
-      return
-    }
-    this.selectType = this.types[0]
-    // 请求当前分类下商品列表
+    // 请求列表
     this.fetchData()
   },
   methods: {
-    // 请求分类商品列表数据
+    // 请求列表数据
     fetchData() {
-      if (!this.selectType) return
       this.listLoading = true
-      // this.$message.warning('加载中，请稍等...')
-      getProductsListByType(this.selectType).then((res) => {
-        this.dataList = res.data
-        this.count = res.count
+      const params = {
+        platform: this.selectedPlatform,
+        name: this.keywords,
+        pageNo: this.currentPage,
+        pageSize: this.pageSize
+      }
+      getProductsList(params).then((res) => {
+        this.dataList = res.content
+        this.totalSize = res.totalSize
         this.listLoading = false
-        // 重置分页
-        this.currentPage = 1
       })
     },
 
-    // 采集数据
+    // 搜索数据
     handleFetch() {
-      if (this.selectedPlatforms.length === 0) {
-        this.$message.warning('请至少选择一个平台')
+      if (!this.selectedPlatform) {
+        this.$message.warning('请选择一个平台')
         return
       }
-      
-      this.listLoading = true
-      // 对每个选中的平台进行数据采集
-      const fetchPromises = this.selectedPlatforms.map(platform => {
-        return spiderShop(this.keywords, this.queryPage, this.startPage, platform)
-      })
-      
-      Promise.all(fetchPromises).then(() => {
-        setTimeout(async() => {
-          const res = await getProductType()
-          this.types = res.data.map((item) => {
-            return item.type
-          })
-          this.selectType = this.keywords
-          this.fetchData()
-          this.listLoading = false
-        }, 3000)
-      }).catch(error => {
-        this.listLoading = false
-      })
+      this.fetchData()
     },
-    
+
     // 处理每页显示数量变化
     handleSizeChange(val) {
       this.pageSize = val
       this.currentPage = 1
+      this.fetchData()
     },
-    
+
     // 处理页码变化
     handleCurrentChange(val) {
       this.currentPage = val
+      this.fetchData()
     },
-    
-    // 获取平台名称
+
+    // 获取平台名称 1拼多多 2京东 3淘宝
     getPlatformName(platform) {
       const platformMap = {
-        'taobao': '淘宝',
-        'jd': '京东',
-        'pdd': '拼多多'
+        1: '拼多多',
+        2: '京东',
+        3: '淘宝'
       }
       return platformMap[platform] || platform
     }
@@ -193,20 +214,24 @@ export default {
   margin-left: 15px;
   width: 100%;
 }
+
 .goods-list-tool {
   width: 100%;
   height: 38px;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
 }
+
 .goods-list-tool ul {
   padding-left: 15px;
   list-style: none;
 }
+
 .goods-list-tool li {
   cursor: pointer;
   float: left;
 }
+
 .goods-list-tool span {
   padding: 5px 8px;
   border: 1px solid #ccc;
@@ -214,78 +239,78 @@ export default {
   line-height: 36px;
   background-color: #fff;
 }
+
 .goods-list-tool span:hover {
   border: 1px solid #e4393c;
 }
+
 .goods-list-tool i:hover {
   color: #e4393c;
 }
+
 .goods-list-tool-active {
   color: #fff;
   border-left: 1px solid #ccc;
   background-color: #e4393c !important;
 }
 
-.goods-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+.goods-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
 }
-.goods-show-info {
-  width: 210px;
-  padding: 10px;
-  cursor: pointer;
-  border: 1px solid rgb(240, 237, 237);
-  box-shadow: 0px 0px 1px #ccc;
-  transition: all 0.3s ease;
+
+.goods-code {
+  color: #666;
+  font-size: 12px;
 }
-.goods-show-info:hover {
-  border: 1px solid #ccc;
-  box-shadow: 0px 0px 15px #ccc;
-}
-.goods-show-img {
-  img {
-    width: 180px;
-    height: 180px;
-  }
-}
-.goods-show-price {
-  margin-top: 6px;
+
+.goods-price {
   display: flex;
   align-items: center;
+  justify-content: center;
+
   svg {
-    font-size: 18px;
+    font-size: 16px;
   }
+
   .seckill-price {
-    font-size: bold;
-    font-size: 18px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #e4393c;
   }
 }
-.goods-show-detail {
-  font-size: 12px;
-  margin: 6px 0px;
-  .area {
-    color: rgb(255, 132, 0);
-    margin-left: 20px;
-  }
-  .platform {
-    color: #409EFF;
-    margin-left: 10px;
-  }
+
+.shop-name {
+  color: #333;
 }
-.goods-show-num {
-  font-size: 12px;
-  margin: 6px 0;
+
+.area {
+  color: rgb(255, 132, 0);
+}
+
+.platform {
+  color: #409EFF;
+}
+
+.sold {
   color: #009688;
 }
-.goods-show-num span {
-  color: #005aa0;
-  font-weight: bold;
+
+.colour,
+.memory,
+.cpu,
+.pixel,
+.screen,
+.refresh,
+.resolution,
+.battery,
+.charger,
+.time {
+  color: #606266;
+  font-size: 13px;
 }
-.goods-show-seller {
-  font-size: 12px;
-  color: #e4393c;
-}
+
 /* ---------------商品栏结束------------------- */
 
 .pagination-container {
@@ -298,6 +323,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 15px;
+
   .label {
     margin-right: 10px;
   }

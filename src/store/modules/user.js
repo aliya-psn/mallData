@@ -43,6 +43,11 @@ const actions = {
     })
   },
 
+  // username 赋值
+  setUsername({ commit }, username) {
+    commit('SET_NAME', username)
+  },
+
   // user login
   loginAction({ commit }, userInfo) {
     const { username, password } = userInfo
@@ -64,6 +69,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         localStorage.removeItem('loginStatus')
+        localStorage.removeItem('username')
         resetRouter()
         commit('RESET_STATE')
         resolve()

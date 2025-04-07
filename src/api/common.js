@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 重新爬取数据
+// 爬取数据
 export function spiderShop(keywords, endPage, startPage) {
   return request({
     url: `/spiderShop?keywords=${keywords}&endPage=${endPage}&startPage=${startPage}`,
@@ -8,33 +8,29 @@ export function spiderShop(keywords, endPage, startPage) {
   })
 }
 
-// 获取商品列表所有
-export function getProductsList() {
+// 异步导入文件 模拟数据爬取，参数：file：formData
+export function asyncImportGoodsData(param) {
   return request({
-    url: `/getProductList`,
-    method: 'get'
-  })
-}
-// 获取商品列表通过分类
-export function getProductsListByType(type) {
-  return request({
-    url: `/getProductsListByType?type=${type}`,
-    method: 'get'
+    url: `/client/async/import/GOODS`,
+    method: 'post',
+    data: param
   })
 }
 
-// 获取商品 type 值
-export function getProductType() {
+// 获取商品列表
+export function getProductsList(param) {
   return request({
-    url: `/getProductType`,
-    method: 'get'
+    url: `/client/goods/`,
+    method: 'get',
+    params: param
   })
 }
 
-// 删除该分类下数据
-export function deleteProductByType(type) {
+// 商品比分排行
+export function getGoodsRank(param) {
   return request({
-    url: `/deleteProductByType/${type}`,
-    method: 'delete'
+    url: `/client/goodsScore/`,
+    method: 'get',
+    params: param
   })
 }

@@ -23,3 +23,26 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+
+/* 重置 el-table 的默认样式 */
+.el-table {
+  font-size: 14px;
+}
+
+/* 重置表头样式 */
+.el-table .el-table__header th {
+  background-color: #f5f5f5;
+  /* 表头背景颜色 */
+  color: #333;
+  /* 表头文字颜色 */
+  font-weight: bold;
+  /* 表头字体加粗 */
+  padding: 12px 0;
+  /* 表头内边距 */
+}
+
+/* 重置单元格样式 */
+.el-table .el-table__row {
+  height: 52px;
+}
