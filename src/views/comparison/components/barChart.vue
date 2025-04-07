@@ -63,7 +63,7 @@ export default {
       const sortedData = [...this.echartsData].sort((a, b) => b.price - a.price)
 
       const category = sortedData.map((item) => {
-        let label = item.name
+        let label = item.shopName || '未知店铺'
         if (label.length > 16) {
           label = label.substring(0, 16) + '...'
         }
@@ -87,7 +87,7 @@ export default {
           label: {
             show: true,
             position: 'top',
-            formatter: '{c}元'
+            formatter: '{c}'
           }
         })
       })
@@ -97,6 +97,54 @@ export default {
           trigger: 'axis',
           axisPointer: {
             type: 'shadow'
+          },
+          confine: true, // 确保提示框不会超出屏幕边缘
+          position: function(point, params, dom, rect, size) {
+            // 根据窗口大小和鼠标位置动态调整tooltip位置
+            const viewWidth = document.documentElement.clientWidth
+            const viewHeight = document.documentElement.clientHeight
+            const contentSize = size.contentSize
+            let x = point[0]
+            let y = point[1]
+
+            // 防止tooltip超出右侧边界
+            if (x + contentSize[0] > viewWidth) {
+              x = x - contentSize[0]
+            }
+
+            // 防止tooltip超出底部边界
+            if (y + contentSize[1] > viewHeight) {
+              y = y - contentSize[1]
+            }
+
+            return [x, y]
+          },
+          formatter: (params) => {
+            const dataIndex = params[0].dataIndex
+            const item = sortedData[dataIndex]
+            if (!item) return ''
+
+            return `
+              <div>
+                <p><strong>${item.name || '未知商品'}</strong></p>
+                <p>店铺：${item.shopName || '未知店铺'}</p>
+                <p>价格：${item.price}元</p>
+                <p>销量：${item.sold || 0}</p>
+                <p>平台：${platformMap[item.platform] || '未知平台'}</p>
+                <p>地区：${item.province || '未知地区'}</p>
+                <p>颜色：${item.colour || '-'}</p>
+                <p>内存：${item.memory || '-'}</p>
+                <p>CPU：${item.cpu || '-'}</p>
+                <p>前置像素：${item.frontPixel || '-'}</p>
+                <p>后置像素：${item.realPixel || '-'}</p>
+                <p>屏幕尺寸：${item.screenSize || '-'}</p>
+                <p>刷新率：${item.refreshRate || '-'}</p>
+                <p>分辨率：${item.resolution || '-'}</p>
+                <p>电池容量：${item.batteryCapacity || '-'}</p>
+                <p>充电接口：${item.chargerPort || '-'}</p>
+                <p>充电功率：${item.chargerPower || '-'}</p>
+              </div>
+            `
           }
         },
         legend: {

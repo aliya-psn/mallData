@@ -1,6 +1,6 @@
 <template>
-  <div style="height:520px; width:100%;">
-    <div :id="id" style="height:500px; width:100%;" />
+  <div style="height:500px; width:100%;">
+    <div :id="id" style="height:480px; width:100%;" />
   </div>
 </template>
 
@@ -51,11 +51,11 @@ export default {
     initOption() {
       const dataCopy = JSON.parse(JSON.stringify(this.echartsData))
       const sortedData = dataCopy
-        .sort((a, b) => parseInt(b.realSales) - parseInt(a.realSales))
+        .sort((a, b) => parseInt(b.sold) - parseInt(a.sold))
         .slice(0, this.number)
       const chartData = sortedData.map(item => ({
         name: item.shopName,
-        value: parseInt(item.realSales)
+        value: parseInt(item.sold)
       }))
       const option = {
         title: {
@@ -66,6 +66,28 @@ export default {
           trigger: 'axis',
           axisPointer: {
             type: 'shadow'
+          },
+          formatter: (params) => {
+            const dataIndex = params[0].dataIndex
+            const item = sortedData[dataIndex]
+            if (!item) return ''
+
+            const platformMap = {
+              1: '拼多多',
+              2: '京东',
+              3: '淘宝'
+            }
+
+            return `
+              <div>
+                <p><strong>${item.name || '未知商品'}</strong></p>
+                <p>店铺：${item.shopName || '未知店铺'}</p>
+                <p>销量：${item.sold || 0}</p>
+                <p>价格：${item.price}元</p>
+                <p>平台：${platformMap[item.platform] || '未知平台'}</p>
+                <p>地区：${item.province || '未知地区'}</p>
+              </div>
+            `
           }
         },
         xAxis: {
@@ -76,7 +98,23 @@ export default {
         yAxis: {
           type: 'category',
           data: chartData.map(item => item.name),
-          inverse: true // 逆序排列
+          inverse: true, // 逆序排列
+          axisLabel: {
+            width: 90,
+            overflow: 'truncate',
+            interval: 0,
+            formatter: function(value) {
+              return value.length > 10 ? value.substring(0, 10) + '...' : value
+            },
+            tooltip: {
+              show: true
+            }
+          }
+        },
+        grid: {
+          left: '15%',
+          right: '6%',
+          containLabel: true
         },
         series: [{
           type: 'bar',
@@ -94,10 +132,3 @@ export default {
 }
 </script>
 
-<style>
-.filter-container {
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-}
-</style>

@@ -56,8 +56,8 @@ export default {
     },
     initOption() {
       const prices = this.echartsData.map(product => product.price)
-      const sales = this.echartsData.map(product => product.realSales)
-      const productNames = this.echartsData.map(product => product.productName)
+      const sales = this.echartsData.map(product => product.sold)
+      const productNames = this.echartsData.map(product => product.name)
 
       const data = {
         title: {
@@ -114,7 +114,7 @@ export default {
     // 分析销量与价格的关系
     analyzeSalesAndDistributionByPriceRange() {
       const prices = this.echartsData.map(product => parseFloat(product.price))
-      const sales = this.echartsData.map(product => parseInt(product.realSales))
+      const sales = this.echartsData.map(product => parseInt(product.sold))
 
       // 设置价格区间和区间销量、区间产品数量的初始值
       const priceRanges = []
@@ -184,4 +184,3 @@ export default {
   color: #f7a63d;
 }
 </style>
-

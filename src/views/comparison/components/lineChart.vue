@@ -1,6 +1,6 @@
 <!--echarts的 line 类型图-->
 <template>
-  <div :id="id" style="height:600px;width:100%;" />
+  <div :id="id" style="height:500px; width:100%;" />
 </template>
 
 <script>
@@ -56,17 +56,24 @@ export default {
       } else {
         data1 = this.echartsData.map((item) => {
           legend = '销量折线图'
-          return item.realSales
+          return item.sold
         })
       }
       const name = this.echartsData.map((item) => {
-        let label = item.productName
+        let label = item.shopName || '未知店铺'
         // 如果标签文字长度大于 16，进行省略
         if (label.length > 16) {
           label = label.substring(0, 16) + '...'
         }
         return label
       })
+
+      const platformMap = {
+        1: '拼多多',
+        2: '京东',
+        3: '淘宝'
+      }
+
       const data = {
         title: {
           text: ''
@@ -78,6 +85,33 @@ export default {
             label: {
               backgroundColor: '#6a7985'
             }
+          },
+          formatter: (params) => {
+            const dataIndex = params[0].dataIndex
+            const item = this.echartsData[dataIndex]
+            if (!item) return ''
+
+            return `
+              <div>
+                <p><strong>${item.name || '未知商品'}</strong></p>
+                <p>店铺：${item.shopName || '未知店铺'}</p>
+                <p>价格：${item.price}元</p>
+                <p>销量：${item.sold || 0}</p>
+                <p>平台：${platformMap[item.platform] || '未知平台'}</p>
+                <p>地区：${item.province || '未知地区'}</p>
+                <p>颜色：${item.colour || '-'}</p>
+                <p>内存：${item.memory || '-'}</p>
+                <p>CPU：${item.cpu || '-'}</p>
+                <p>前置像素：${item.frontPixel || '-'}</p>
+                <p>后置像素：${item.realPixel || '-'}</p>
+                <p>屏幕尺寸：${item.screenSize || '-'}</p>
+                <p>刷新率：${item.refreshRate || '-'}</p>
+                <p>分辨率：${item.resolution || '-'}</p>
+                <p>电池容量：${item.batteryCapacity || '-'}</p>
+                <p>充电接口：${item.chargerPort || '-'}</p>
+                <p>充电功率：${item.chargerPower || '-'}</p>
+              </div>
+            `
           }
         },
         legend: {
@@ -115,14 +149,14 @@ export default {
           {
             type: 'inside', // 内置的数据区域缩放
             xAxisIndex: [0], // 仅对横轴进行缩放
-            start: 50, // 缩放范围的起始百分比
-            end: 100 // 缩放范围的结束百分比
+            start: 0, // 缩放范围的起始百分比
+            end: name.length <= 10 ? 100 : 100 * (10 / name.length) // 如果数据超过10条，则只显示前10条
           },
           {
             type: 'slider', // 数据窗口漫游
             xAxisIndex: [0], // 仅对横轴进行漫游
-            start: 50, // 数据窗口的起始百分比
-            end: 100 // 数据窗口的结束百分比
+            start: 0, // 数据窗口的起始百分比
+            end: name.length <= 10 ? 100 : 100 * (10 / name.length) // 如果数据超过10条，则只显示前10条
           }
         ]
       }

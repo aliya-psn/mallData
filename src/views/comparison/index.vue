@@ -24,31 +24,52 @@
         <el-button type="primary" style="margin-left: 20px" @click="getData">查询</el-button>
       </div>
       <div class="data-limit-tip">
-        <i class="el-icon-info" /> 注意：系统仅处理前1000条数据，以确保分析性能
+        <i class="el-icon-info" /> 注意：系统仅处理前1000条数据，筛选出来的数据按价格从高到低展示
       </div>
     </div>
 
     <div v-if="filteredData.length > 0" class="charts-container">
       <!-- 价格与销量 柱状图 -->
       <barChart v-if="filteredData.length > 0" id="barChart" :echarts-data="filteredData" />
-      <!-- 店铺销量图 -->
-      <!-- <barShop v-if="filteredData.length > 0" id="bar-shop" :echarts-data="filteredData" /> -->
-      <!-- 发货地饼图 -->
-      <!-- <chinaArea v-if="filteredData.length > 0" id="area-chart" :echarts-data="filteredData" /> -->
+      <!-- 店铺销量图和发货地饼图一行展示 -->
+      <div class="chart-row">
+        <!-- 店铺销量图 -->
+        <div class="chart-half">
+          <barShop v-if="filteredData.length > 0" id="bar-shop" :echarts-data="filteredData" />
+        </div>
+        <!-- 发货地饼图 -->
+        <div class="chart-half">
+          <chinaArea v-if="filteredData.length > 0" id="area-chart" :echarts-data="filteredData" />
+        </div>
+      </div>
+
+      <!-- 价格分布直方图和散点图一行展示 -->
+      <!-- <div class="chart-row">
+        <div class="chart-half">
+          <barPrice v-if="filteredData.length > 0" id="barPrice" :echarts-data="filteredData" />
+        </div>
+        <div class="chart-half">
+          <scatterChart v-if="filteredData.length > 0" id="scatter" :echarts-data="filteredData" />
+        </div>
+      </div> -->
+
+      <!-- 价格折线图和销量折线图一行展示 -->
+      <div class="chart-row">
+        <!-- 价格折线图 -->
+        <div class="chart-half">
+          <lineChart v-if="filteredData.length > 0" id="line1" :echarts-data="filteredData" />
+        </div>
+        <!-- 销量折线图 -->
+        <div class="chart-half">
+          <lineChart v-if="filteredData.length > 0" id="line2" :echarts-data="filteredData" />
+        </div>
+      </div>
     </div>
     <div v-else class="no-data">
       <i class="el-icon-warning" />
-      <span>暂无数据</span>
+      <span>请输入商品名称进行查询</span>
     </div>
 
-    <!-- 价格与销量 散点图 -->
-    <!-- <scatterChart v-if="filteredData.length > 0" id="scatter" :echarts-data="filteredData" /> -->
-    <!-- 价格分布直方图 -->
-    <!-- <barPrice v-if="filteredData.length > 0" id="barPrice" :echarts-data="filteredData" /> -->
-    <!-- 价格折线图 -->
-    <!-- <lineChart v-if="filteredData.length > 0" id="line1" :echarts-data="filteredData" /> -->
-    <!-- 销量折线图 -->
-    <!-- <lineChart v-if="filteredData.length > 0" id="line2" :echarts-data="filteredData" /> -->
   </div>
 </template>
 
@@ -232,10 +253,28 @@ export default {
   gap: 30px;
 }
 
+.chart-row {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.chart-half {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
 .no-data {
   margin: 50px 0;
   color: #909399;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
+  i {
+    margin-right: 5px;
+  }
 }
 </style>

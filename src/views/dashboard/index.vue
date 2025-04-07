@@ -4,12 +4,16 @@
       <el-input
         ref="keywords"
         v-model="keywords"
-        placeholder="搜索关键字（手机）"
+        placeholder="搜索商品名称"
         type="text"
         tabindex="1"
         auto-complete="on"
         style="width: 300px"
+        clearable
       />
+      <el-button type="primary" style="margin-left: 20px" :loading="listLoading" @click="handleFetch">搜索</el-button>
+      <el-button type="primary" @click="handleReset">重置</el-button>
+
       <div class="platform-select">
         <span class="label">选择平台：</span>
         <el-radio-group v-model="selectedPlatform">
@@ -24,18 +28,12 @@
           </el-radio>
         </el-radio-group>
       </div>
-      <el-button type="primary" style="margin-left: 20px" :loading="listLoading" @click="handleFetch">搜索</el-button>
     </div>
     <div class="goods-list-box">
       <el-table v-loading="listLoading" :data="dataList" fit highlight-current-row style="width: 100%">
         <el-table-column label="商品名称" prop="name" min-width="200">
           <template slot-scope="scope">
             <span class="goods-name">{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="商品编码" prop="code" width="180" align="center">
-          <template slot-scope="scope">
-            <span class="goods-code">{{ scope.row.code }}</span>
           </template>
         </el-table-column>
         <el-table-column label="价格" prop="price" width="100" align="center">
@@ -59,6 +57,14 @@
         <el-table-column label="销量" prop="sold" width="100" align="center">
           <template slot-scope="scope">
             <span class="sold">已售：{{ scope.row.sold }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="商品编码" prop="code" width="200" align="center">
+          <template slot-scope="scope">
+            <span class="goods-code" @click="copyToClipboard(scope.row.code)">
+              {{ scope.row.code }}
+              <i class="el-icon-document-copy copy-icon" />
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="颜色" prop="colour" width="90" align="center">
@@ -152,6 +158,13 @@ export default {
       pageSize: 10 // 每页显示数量
     }
   },
+  watch: {
+    // 监听平台变化
+    selectedPlatform() {
+      this.currentPage = 1
+      this.fetchData()
+    }
+  },
   async created() {
     // 请求列表
     this.fetchData()
@@ -181,6 +194,12 @@ export default {
       }
       this.fetchData()
     },
+    handleReset() {
+      this.keywords = ''
+      this.selectedPlatform = 1
+      this.currentPage = 1
+      this.fetchData()
+    },
 
     // 处理每页显示数量变化
     handleSizeChange(val) {
@@ -203,6 +222,17 @@ export default {
         3: '淘宝'
       }
       return platformMap[platform] || platform
+    },
+
+    // 复制商品编码到剪贴板
+    copyToClipboard(text) {
+      const input = document.createElement('input')
+      input.value = text
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+      this.$message.success('商品编码已复制到剪贴板')
     }
   }
 }
@@ -263,6 +293,25 @@ export default {
 .goods-code {
   color: #666;
   font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: #409EFF;
+
+    .copy-icon {
+      opacity: 1;
+    }
+  }
+
+  .copy-icon {
+    margin-left: 5px;
+    font-size: 14px;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
 }
 
 .goods-price {

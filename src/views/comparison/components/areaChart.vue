@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" style="height: 550px; width: 100%" />
+  <div :id="id" style="height: 500px; width: 100%" />
 </template>
 
 <script>
@@ -94,8 +94,8 @@ export default {
       const dataCopy = JSON.parse(JSON.stringify(data))
       // 合并具有相同地区的销量
       dataCopy.forEach(item => {
-        const area = item.area
-        const value = parseInt(item.realSales)
+        const area = item.province || '未知地区'
+        const value = parseInt(item.sold) || 0
 
         if (!areaMap[area]) {
           areaMap[area] = value
