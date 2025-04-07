@@ -123,7 +123,7 @@ export default {
       keywords: '', // 关键字
       listLoading: false,
       selectedPlatform: 'taobao', // 默认选择淘宝
-      activeCollectionMethod: 'manual', // 默认选择手动采集
+      activeCollectionMethod: 'file', // 默认选择手动采集
 
       queryPage: 5, // 截止
       startPage: 1, // 开始
