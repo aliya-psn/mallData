@@ -17,19 +17,6 @@ import '@/permission' // permission control
 
 Vue.prototype.dayjs = dayjs
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
-
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI, { size: 'small' })
 

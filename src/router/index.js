@@ -65,16 +65,6 @@ export const constantRoutes = [
       meta: { title: '个人中心', icon: 'user' }
     }]
   },
-  // {
-  //   path: '/echart',
-  //   component: Layout,
-  //   children: [{
-  //     path: 'echart',
-  //     name: 'Echart',
-  //     component: () => import('@/views/echarts/index'),
-  //     meta: { title: '统计图表', icon: 'echart' }
-  //   }]
-  // },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

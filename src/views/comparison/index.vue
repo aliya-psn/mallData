@@ -29,7 +29,7 @@
     </div>
 
     <div v-if="filteredData.length > 0" class="charts-container">
-      <!-- 价格与销量 柱状图 -->
+      <!-- 价格 柱状图 -->
       <barChart v-if="filteredData.length > 0" id="barChart" :echarts-data="filteredData" />
       <!-- 店铺销量图和发货地饼图一行展示 -->
       <div class="chart-row">
@@ -39,7 +39,7 @@
         </div>
         <!-- 发货地饼图 -->
         <div class="chart-half">
-          <chinaArea v-if="filteredData.length > 0" id="area-chart" :echarts-data="filteredData" />
+          <areaChart v-if="filteredData.length > 0" id="area-chart" :echarts-data="filteredData" />
         </div>
       </div>
 
@@ -76,7 +76,7 @@
 <script>
 import { getGoodsRank } from '@/api/common'
 import barShop from './components/barShop.vue' // 店铺销量柱状图
-import chinaArea from './components/areaChart.vue' // 发货地饼图
+import areaChart from './components/areaChart.vue' // 发货地饼图
 
 import barChart from './components/barChart.vue' // 柱状图
 import barPrice from './components/barPrice.vue' // 柱状图
@@ -87,7 +87,7 @@ export default {
   name: 'Echart',
   components: {
     barShop,
-    chinaArea,
+    areaChart,
     barChart,
     barPrice,
     lineChart,
