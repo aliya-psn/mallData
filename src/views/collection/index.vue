@@ -11,7 +11,7 @@
       <div class="collection-methods">
         <h3 class="method-title">选择采集方式</h3>
         <el-tabs v-model="activeCollectionMethod" type="card">
-          <el-tab-pane label="手动采集" name="manual">
+          <!-- <el-tab-pane label="手动采集" name="manual">
             <div class="input-wrapper">
               <div class="label">商品名：</div>
               <el-input
@@ -53,9 +53,9 @@
                 <i class="el-icon-download" /> 开始采集
               </el-button>
             </div>
-          </el-tab-pane>
+          </el-tab-pane> -->
 
-          <el-tab-pane label="文件模拟采集" name="file">
+          <el-tab-pane label="文件上传采集" name="file">
             <div class="file-operations">
               <div class="upload-section">
                 <span class="label">上传数据文件：</span>
